@@ -24,11 +24,11 @@ const productSchema = new Schema({
         type: Number,
         required:true
     },
-    Image:{
+    image:{
         type:String,
         required:true
     },
-    Reviews: [
+    reviews: [
       {
             
         user:{

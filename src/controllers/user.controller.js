@@ -193,10 +193,16 @@ const logoutUser = async (req,res) => {
         message: "No Token"
         });
 
-    const logoutUser = await User.updateOne(
+    const logout = await User.updateOne(
         { refreshToken: token },
         { $unset : { refreshToken: "" }}
     );
+
+    if(!logout)
+        return res.status(500).json({
+        success: false,
+        message: "Failed to Lougout"
+    });
 
     res.status(200).json({
         success: true,
@@ -210,5 +216,6 @@ export {
     updateUser,
     getUsers,
     loginUser,
+    logoutUser,
     refreshUserToken
 }

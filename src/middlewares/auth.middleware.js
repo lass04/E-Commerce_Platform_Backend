@@ -18,7 +18,7 @@ const verifyToken = async (req) => {
 const adminOnly = async (req,res,next) => {
     const user = verifyToken(req);
 
-    if(!user)
+    if(user==null)
         return res.status(403).json({
             success:false,
             message:"Invalid Token"

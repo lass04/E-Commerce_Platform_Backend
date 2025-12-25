@@ -45,6 +45,7 @@ const createUser = async (req,res) => {
 }
 
 const updateUser = async (req,res) => {
+    
     try{
         if(Object.keys(req).length===0)
                     return res.status(400).json({
@@ -115,6 +116,7 @@ const getUsers = async (req,res) => {
 }
 
 const loginUser = async (req,res) => {
+
     const { email, password } = req.body;
 
     if(!email || ! password)

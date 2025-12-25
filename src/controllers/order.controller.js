@@ -107,12 +107,15 @@ const getUserOrders = async (req,res) => {
             message:"User Id is missing "
         });
 
-    const orders = await Order.find({user:id});
-    if(!orders)
-        return res.status(204).json({
+    let orders = await Order.find({user:id}).populate("items.product");
+    if(orders.length===0)
+        return res.status(200).json({
             success:true,
             message:"No Orders for this user"
         });
+
+        // Map orders to products 
+        orders = orders.flatMap(ele=>ele.items);
 
     res.status(200).json({
         success:true,

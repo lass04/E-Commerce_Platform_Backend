@@ -123,7 +123,7 @@ const loginUser = async (req,res) => {
     message:"Credentials required"
      });
 
-     const findUser = await User.find({email:email});
+     const findUser = await User.findOne({email:email});
      if(!findUser)
         return res.status(401).json({
     success:false,
@@ -140,7 +140,7 @@ const loginUser = async (req,res) => {
  const accessToken = createAccessToken(findUser);
  const refreshToken = createRefreshToken(findUser);
 
-  res.cookies("refreshToken",refreshToken,{
+  res.cookie("refreshToken",refreshToken,{
     httpOnly: true,
     sameSite: "strict"
   });

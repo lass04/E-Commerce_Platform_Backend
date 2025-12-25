@@ -16,7 +16,8 @@ const productSchema = new Schema({
     },
     category:[
         {
-            type:String,
+            type:mongoose.Schema.Types.ObjectId,
+            ref:"Category",
             required:true
         }
     ],
@@ -32,7 +33,7 @@ const productSchema = new Schema({
       {
             
         user:{
-                user:mongoose.Schema.Types.ObjectId,
+                type:mongoose.Schema.Types.ObjectId,
                 ref: "User"
         },
 

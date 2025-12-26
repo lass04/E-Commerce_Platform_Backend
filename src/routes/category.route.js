@@ -5,10 +5,10 @@ import { adminOnly } from "../middlewares/auth.middleware.js";
 
 const router = new Router();
 
-router.route("/createCategory").post(adminOnly,createCategory);
-router.route("/deleteCategory").delete(adminOnly,deleteCategory);
-router.route("/updateCategory").patch(adminOnly,updateCategory);
-router.route("/getCategories").get(adminOnly,getCategories);
-router.route("/insertManyCategories").post(adminOnly,insertManyCategories);
+router.route("/create").post(adminOnly,createCategory);
+router.route("/delete/:id").delete(adminOnly,deleteCategory);
+router.route("/update/:id").patch(adminOnly,updateCategory);
+router.route("/get").get(adminOnly,getCategories);
+router.route("/insertMany").post(adminOnly,insertManyCategories);
 
 export default router;

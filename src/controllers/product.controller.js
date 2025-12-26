@@ -80,13 +80,20 @@ const deleteProduct = async (req,res) => {
 const updateProduct = async (req,res) => {
     try{
         
+        const id = req.params.id;
+        if(!id)
+            return res.status(400).json({
+                success:false,
+                message:"No parameters in your request"
+            });
+
         if(Object.keys(req.body).length===0)
             return res.status(400).json({
                 success:false,
                 message:"No data provided"
             });
 
-        const updateProduct = await Product.findByIdAndUpdate(req.params.id,req.body,{new:true});
+        const updateProduct = await Product.findByIdAndUpdate(id,req.body,{new:true});
 
         if(!updateProduct)
             return res.status(404).json({

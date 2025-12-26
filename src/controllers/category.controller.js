@@ -75,12 +75,14 @@ const deleteCategory = async (req,res) => {
 const updateCategory = async (req,res) => {
     
     try{
+        
     const id = req.params.id;
     if(!id)
             return res.status(400).json({
                 success:false,
                 message:"No Data (missing category id in request)"
         });
+
     if(Object.keys(req.body).length===0)
         return res.status(400).json({
             success:false,

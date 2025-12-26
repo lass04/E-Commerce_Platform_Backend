@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-const verifyToken = async (req) => {
+const verifyToken = function (req) {
     
     const auth = req.headers.authorization;
     if(!auth || !auth.startsWith("Bearer"))
@@ -10,15 +10,17 @@ const verifyToken = async (req) => {
 
     try{
         return jwt.verify(token,process.env.ACCESS_TOKEN_SECRET);
+        
     }catch{
         return null
     }
 }
 
 const adminOnly = async (req,res,next) => {
+
     const user = verifyToken(req);
 
-    if(user==null)
+    if(user===null)
         return res.status(403).json({
             success:false,
             message:"Invalid Token"

@@ -1,13 +1,20 @@
 import Router from "express";
-import { createUser, deleteUser, updateUser, getUsers } from "../controllers/user.controller.js";
+import { createUser, deleteUser, updateUser, getUsers , loginUser , logoutUser , refreshUserToken }
+from "../controllers/user.controller.js";
 
 const router = new Router();
 
-// Defining User Routes
+// Defining User CRUD Routes
 
-router.route("/createUser").post(createUser);
-router.route("/deleteUser").delete(deleteUser);
-router.route("/updateUser").patch(updateUser);
-router.route("/createUser").get(getUsers);
+router.route("/create").post(createUser);
+router.route("/delete").delete(deleteUser);
+router.route("/update").patch(updateUser);
+router.route("/create").get(getUsers);
+
+// User Auth Routes
+
+router.route("/login").post(loginUser);
+router.route("/refresh").post(refreshUserToken);
+router.route("/logout").post(logoutUser);
 
 export default router;

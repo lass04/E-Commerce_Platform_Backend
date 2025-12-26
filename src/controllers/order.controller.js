@@ -4,8 +4,9 @@ import { Order } from "../models/order.model.js";
 const createOrder = async (req,res) => {
     
     try{
-    const { user, items , totalPrice , status } = req.body;
 
+    const { user, items , totalPrice , status } = req.body;
+        
     if(!user || items.length===0 || !totalPrice || !status )
         return res.status(400).json({
             success: false,

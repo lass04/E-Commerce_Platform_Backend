@@ -47,11 +47,19 @@ const createUser = async (req,res) => {
 const updateUser = async (req,res) => {
     
     try{
+
+        const id = req.params.id;
+        if(!id)
+            return res.status(400).json({
+                success:false,
+                message:"No parameters in your request"
+            });
+
         if(Object.keys(req).length===0)
                     return res.status(400).json({
                       message: "No data provided"});
         
-                const updateUser = await User.findByIdAndUpdate(req.params.id,req.body,{new:true});
+                const updateUser = await User.findByIdAndUpdate(id,req.body,{new:true});
                 if(!updateUser)
                     return res.status(404).json({message: "User not found"});
         
@@ -73,8 +81,15 @@ const updateUser = async (req,res) => {
 const deleteUser = async (req,res) => {
 
         try{
+
+            const id = req.params.id;
+        if(!id)
+            return res.status(400).json({
+                success:false,
+                message:"No parameters in your request"
+            });
         
-                const deleteUser = await User.findByIdAndDelete(req.params.id);
+                const deleteUser = await User.findByIdAndDelete(id);
                 if(!deleteUser)
                     return res.status(404).json({message: "User Not found"});
         

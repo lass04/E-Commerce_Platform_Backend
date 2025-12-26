@@ -13,6 +13,15 @@ const createOrder = async (req,res) => {
             message: "All fields are required"
         });
 
+    let verifyTotal = 0;
+    items.forEach(ele=>verifyTotal+=(ele.quantity*ele.price));
+
+    if(totalPrice!==verifyTotal)
+        return res.status(400).json({
+            succes:false,
+            message:`Wrong total Price (correct one : ${verifyTotal})`
+        });
+
     const createOrd = await Order.create({
         user:user,
         items:items,
@@ -133,10 +142,37 @@ const getUserOrders = async (req,res) => {
     }
 }
 
+const getOrders = async (req,res) => {
+    
+    try{
+
+        const orders = await Order.find();
+
+        if(orders.length===0)
+            return res.status(200).json({
+                succes:true,
+                message:"No Orders in DB"
+            });
+
+        res.status(200).json({
+            success:true,
+            message:"All Orders : ",
+            orders:orders
+        })
+
+    }catch(error){
+        return res.status(500).json({
+            success:false,
+            message:"Internal Server error",
+            error:error.message
+        });
+    }
+}
 
 export {
     createOrder,
     deleteOrder,
     updateOrder,
-    getUserOrders
+    getUserOrders,
+    getOrders
 }

@@ -203,6 +203,7 @@ const refreshUserToken = async (req,res) => {
 }
 
 const logoutUser = async (req,res) => {
+    
     const token = req.cookies.refreshToken;
     if(!token)
         return res.status(403).json({

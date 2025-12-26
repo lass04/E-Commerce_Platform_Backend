@@ -9,5 +9,6 @@ Features :
 * RESTful APIs
 * JWT Authentication & Authorizaion
 * bcrypt Password Hashing
-* Gemini AI Integration
-* Rate Limiting 
+* AI Integration
+* Rate Limiting
+* Cors Configuration

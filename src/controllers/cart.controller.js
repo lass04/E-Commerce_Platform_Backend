@@ -1,12 +1,59 @@
 import { Cart } from "../models/cart.model.js";
 import { Product } from "../models/product.model.js";
 import { getCartSummary } from "./ai.controller.js";
+import { User } from "../models/user.model.js";
+
+const createCart = async (req,res) => {
+
+    try{
+
+    let items = [];
+    let totalPrice = 0;
+    const user = req.user.userId;
+
+    const findUser = await User.findOne({_id:user});
+    if(!findUser)
+        return res.status(400).json({
+            succes:false,
+            message:"User Id is missing"
+        });
+
+    const findCart = await Cart.findOne({user:user});
+        if(findCart)
+            return res.status(400).json({
+                success:false,
+        message:"Cart already exist (One cart for every user)"
+            });
+
+
+    const createCart = await Cart.create({
+        user:user,
+        items:items,
+        totalPrice:totalPrice
+    });
+
+    res.status(201).json({
+        success:true,
+        message:"Cart successfully created",
+        cart:createCart
+    });
+
+ }catch(error){
+    return res.status(500).json({
+        succes:false,
+        message:"Internal Server Error",
+        error:error.message
+    });
+ }
+
+}
 
 const addProductToCart = async (req,res) => {
+
     try{
     
         const { productId , quantity } = req.body;
-        const userId = req.user._id;
+        const userId = req.user.userId;
 
         if(!productId || !quantity || !userId)
             return res.status(400).json({
@@ -111,15 +158,17 @@ const updateProductQuantity = async (req,res) => {
 }
 
 const removeProductFromCart = async (req,res) => {
+   
     try{
 
-        const { productId } =req.body;
-        const userId = req.user._id;
+        const productId =req.params.id
+
+        const userId = req.user.userId;
 
         if(!productId || !userId)
             return res.status(400).json({
                 success:false,
-                message:" All fields are required (ProductId or Cart UserId)"
+                message:" Missing ProductId or Cart UserId (or both)"
             });
 
         const findCart = await Cart.findOne({user:userId});
@@ -129,12 +178,6 @@ const removeProductFromCart = async (req,res) => {
                 message:"Cart Not found"
             });
 
-            const findProduct = await Product.findById(productId);
-        if(!findProduct)
-            return res.status(404).json({
-                success:false,
-                message:"Product Not Found"
-            });
 
             const productExistInCart = findCart.items.find(ele=>ele.product.toString()===productId);
         if(!productExistInCart)
@@ -166,7 +209,7 @@ const viewCartSummary = async (req,res) => {
 
     try{
     
-        const userId = req.user._id;
+        const userId = req.user.userId;
 
     if(!userId)
         return res.status(400).json({
@@ -202,5 +245,6 @@ export {
     addProductToCart,
     updateProductQuantity,
     removeProductFromCart,
-    viewCartSummary
+    viewCartSummary,
+    createCart
 }

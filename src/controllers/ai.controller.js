@@ -1,24 +1,28 @@
-import { GoogleGenAI } from "@google/genai";
+import fetch from "node-fetch";
 import { Order } from "../models/order.model.js";
 import { Product } from "../models/product.model.js";
 import { Cart } from "../models/cart.model.js";
 import "dotenv/config";
 
-const ai = new GoogleGenAI({
-    apiKey:process.env.GEMINI_API_KEY
-});
+
 
 export const getCartSummary = async (userId) => {
 
     const findCart = await Cart.findOne({user:userId}).populate("items.product");
 
-    let prompt = `Based on a Cart in JSON format , you will make a good summary which is clear and well structured : ${JSON.stringify(findCart,null,2)}`
-  const response = await ai.models.generateContent({
-    model: "gemini-2.5-flash",
-    contents: prompt,
-  });
+    let prompt = `Based on a Cart in JSON format , you will make a good summary 
+    which is clear and well structured : ${JSON.stringify(findCart,null,2)}`;
   
-  return response.text();
+    const response = await fetch("https://router.huggingface.co/api/chat", {
+  method: "POST",
+  headers: {
+    "Authorization": `Bearer ${process.env.AI_API_KEY}`,
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({ inputs: prompt })  // Must be JSON, not a plain string
+});
+  
+  return response.json();
 
 }
 

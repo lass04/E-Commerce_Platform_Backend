@@ -197,13 +197,13 @@ const refreshUserToken = async (req,res) => {
     const accessToken = createAccessToken(findUser);
     res.status(200).json({
         success:true,
-        message:"Access Token",
+        message:"Refreshed Access Token",
         accessToken:accessToken
     })
 }
 
 const logoutUser = async (req,res) => {
-    
+
     const token = req.cookies.refreshToken;
     if(!token)
         return res.status(403).json({

@@ -5,7 +5,7 @@ import cookieParser from "cookie-parser";
 import categoryRouter from "./routes/category.route.js";
 import cartRouter from "./routes/cart.route.js";
 import productRouter from "./routes/product.route.js";
-import rateLimiter from "../middlewares/rateLimit.js";
+import { rateLimiter } from "./middlewares/rateLimit.middleware.js";
 import cors from "cors";
 
 const app = express();

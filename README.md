@@ -10,3 +10,4 @@ Features :
 * JWT Authentication & Authorizaion
 * bcrypt Password Hashing
 * Gemini AI Integration
+* Rate Limiting 

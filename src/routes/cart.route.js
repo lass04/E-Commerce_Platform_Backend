@@ -2,6 +2,7 @@ import Router from "express";
 import { addProductToCart, updateProductQuantity , removeProductFromCart , viewCartSummary } 
 from "../controllers/cart.controller.js";
 
+
 const router = new Router();
 
 router.route("/addProduct").post(addProductToCart);

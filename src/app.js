@@ -5,13 +5,16 @@ import cookieParser from "cookie-parser";
 import categoryRouter from "./routes/category.route.js";
 import cartRouter from "./routes/cart.route.js";
 import productRouter from "./routes/product.route.js";
-
+import rateLimiter from "../middlewares/rateLimit.js";
 
 const app = express();
 
 // Request & Cookie Parsing Middlewares
 app.use(express.json());
 app.use(cookieParser());
+
+// Applying RateLimiter in all app routes
+app.use(rateLimiter);
 
 // Declaring Routes
 app.use("/api/v1/users",userRouter)

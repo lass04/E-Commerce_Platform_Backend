@@ -17,6 +17,7 @@ export const getCartSummary = async (userId) => {
   const client = new InferenceClient(process.env.INFERENCE_PROVIDER_KEY);
 
   const chatCompletion = await client.chatCompletion({
+
      model: "openai/gpt-oss-120b:fastest",
      messages: [
        {
@@ -28,31 +29,26 @@ export const getCartSummary = async (userId) => {
 
     
  return chatCompletion.choices[0].message;
-
  
 }
 
-export const filterProductsByUserId = async (userId) => {
-  
-  const userOrders = await Order.find({user:userId});
-  if(!userOrders)
-    return null;
+export const ProductsRating = async (products) => {
 
-  const allProducts = await Product.find();
-  const userProducts = JSON.stringify(userOrders.items,null,2);
+  let prompt = `Based on this array : ${products} which is an array of products with reviews 
+  , You will calculate ratings for every product and order these products and return A JSON format response`;
 
-  let prompt = `Based on the list of products (ordered by a specific user)that you get , 
-  You will order all products by user preferences (and how much quantity he ordered) then return a well-formated
-   and structured JSON response , this is the user data : ${userProducts} , and this is all products list : ${allProducts}`;
+  const client = new InferenceClient(process.env.INFERENCE_PROVIDER_KEY);
 
-  const response = await ai.models.generateContent({
-    model:"gemini-2.5-flash",
-    contents:prompt
-  });
+  const chatCompletion = await client.chatCompletion({
+    
+     model: "openai/gpt-oss-120b:fastest",
+     messages: [
+       {
+        role: "user",
+        content: prompt,
+       }
+       ]
+       });
 
-  if(!response)
-    return null
-  else 
-    return response.text();
-
+       return chatCompletion.choices[0].message;
 }

@@ -1,6 +1,6 @@
 import { Product } from "../models/product.model.js";
 import { Order } from "../models/order.model.js";
-
+import { ProductsRating } from "./ai.controller.js";
 
 const createProduct = async (req,res) => {
 
@@ -78,6 +78,7 @@ const deleteProduct = async (req,res) => {
 }
 
 const updateProduct = async (req,res) => {
+   
     try{
         
         const id = req.params.id;
@@ -149,7 +150,7 @@ const getProducts = async (req,res) => {
             });
         }
 
-        const userId = req.user._id;
+        const userId = req.user.userId;
 
         if(!userId){
             const products = await Product.find();
@@ -219,7 +220,135 @@ const insertManyProducts = async (req,res) => {
     }catch(error){
         return res.status(500).json({
             success:false,
-            message:"Internal Server error"
+            message:"Internal Server error",
+            error:error.message
+        });
+    }
+}
+
+const getProductsRating = async (req,res) => {
+    
+    try{
+        
+        //  ($expr) Allow aggregation expressions
+        // Here we need products where reviews array size is greater than 0
+
+        let products = await Product.find({
+            $expr : {$gt: [{$size:"$reviews"},0] }
+        });
+
+        if(!products.length)
+            return res.status(200).json({
+                success:true,
+                message:"No reviews available"
+            });
+
+        products = products.map(product=> product = {"productId":product._id,"productName":product.name,"reviews":product.reviews});
+
+        const response = await ProductsRating(products);
+
+        return response;
+
+    }catch(error){
+        return res.status(500).json({
+            success:false,
+            message:"Internal Server error",
+            error:error.message
+        });
+    }
+}
+
+const deleteReviewFromProduct = async (req,res) => {
+    
+    try{
+        
+        const productId = req.params.id;
+        if(!productId)
+            return res.status(400).json({
+                success:false,
+                message:"No product id in your request parameters"
+            });
+
+        const { userId } = req.body;
+        if(!userId)
+            return res.status(400).json({
+                success:false,
+                message:"No User Id in request body"
+            });
+
+        const findProduct = await Product.findOne({_id:productId});
+        if(!findProduct)
+            return res.status(404).json({
+                success:false,
+                message:"Product does not exist"
+            });
+
+        const findReview = findProduct.reviews.find(ele=> ele.user===userId);
+        if(!findReview)
+            return res.status(404).json({
+                success:false,
+                message:"This user haven't put any reviews on this product"
+            });
+
+        findProduct.reviews = findProduct.reviews.filter(ele=>ele.user.toString()!==userId);
+        await findProduct.save();
+
+        res.status(200).json({
+            success:true,
+            message:"Review successfully deleted",
+            product:findProduct
+        });
+
+    }catch(error){
+        return res.status(500).json({
+            success:false,
+            message:"Internal Server error",
+            error:error.message
+        })
+    }
+}
+
+const addReviewToProduct = async (req,res) => {
+    
+    try{
+
+        const productId = req.params.id;
+        const { user , rating , comment } = req.body;
+
+        if(!productId || !user || !rating || !comment )
+            return res.status(400).json({
+                success:false,
+                message:"All fields are required (ProductId must be in request parameters",
+            });
+
+        const findProduct = await Product.findOne({_id:productId});
+        if(!findProduct)
+            return res.status(404).json({
+                success:false,
+                message:"Product does not exist"
+            });
+
+        const findReview = findProduct.reviews.find(ele=>ele.user.toString()===userId);
+        if(findReview)
+            return res.status(400).json({
+                success:false,
+                message:"User already put a review on this product"
+            });
+
+        findProduct.reviews.push({user,rating,comment});
+        await findProduct.save();
+
+        res.status(201).json({
+            success:true,
+            message:"Review added successfully",
+            product:findProduct
+        });
+
+    }catch(error){
+        return res.status(500).json({
+            success:false,
+            message:"Internal Server error",
+            error:error.message
         });
     }
 }
@@ -229,5 +358,8 @@ export {
     deleteProduct,
     updateProduct,
     getProducts,
-    insertManyProducts
+    insertManyProducts,
+    getProductsRating,
+    deleteReviewFromProduct,
+    addReviewToProduct
 }

@@ -105,9 +105,11 @@ const addProductToCart = async (req,res) => {
 }
 
 const updateProductQuantity = async (req,res) => {
+    
     try{
+
         const { productId , quantity } = req.body;
-        const userId = req.user._id;
+        const userId = req.user.userId;
 
 
         if(!productId || quantity===undefined || !userId)

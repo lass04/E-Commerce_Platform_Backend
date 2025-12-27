@@ -188,9 +188,46 @@ const getProducts = async (req,res) => {
     }
 }
 
+const insertManyProducts = async (req,res) => {
+    
+    try{
+
+        const products = req.body
+        if(Object.keys(products).length===0)
+            return res.status(400).json({
+                success:false,
+                message:"No data provided"
+            });
+
+        products.forEach(product => async ()=>{
+            const findProduct = await Product.find({_id:product._id});
+            if(findProduct)
+                return res.status(400).json({
+                    success:false,
+                    message:"Product already exists in DB :",
+                    product:findProduct
+                });
+        });
+
+        const insertProducts = await Product.insertMany(products);
+
+        res.status(201).json({
+            success:true,
+            message:"Inserted successfully"
+        });
+
+    }catch(error){
+        return res.status(500).json({
+            success:false,
+            message:"Internal Server error"
+        });
+    }
+}
+
 export {
     createProduct,
     deleteProduct,
     updateProduct,
-    getProducts
+    getProducts,
+    insertManyProducts
 }

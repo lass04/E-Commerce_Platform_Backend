@@ -1,4 +1,4 @@
-import fetch from "node-fetch";
+import { InferenceClient } from "@huggingface/inference";
 import { Order } from "../models/order.model.js";
 import { Product } from "../models/product.model.js";
 import { Cart } from "../models/cart.model.js";
@@ -11,19 +11,25 @@ export const getCartSummary = async (userId) => {
     const findCart = await Cart.findOne({user:userId}).populate("items.product");
 
     let prompt = `Based on a Cart in JSON format , you will make a good summary 
-    which is clear and well structured : ${JSON.stringify(findCart,null,2)}`;
+    which is clear and well structured (Please let the response be in JSON format remove '\n'): ${JSON.stringify(findCart,null,2)}`;
   
-    const response = await fetch("https://router.huggingface.co/api/chat", {
-  method: "POST",
-  headers: {
-    "Authorization": `Bearer ${process.env.AI_API_KEY}`,
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({ inputs: prompt })  // Must be JSON, not a plain string
-});
-  
-  return response.json();
 
+  const client = new InferenceClient(process.env.INFERENCE_PROVIDER_KEY);
+
+  const chatCompletion = await client.chatCompletion({
+     model: "openai/gpt-oss-120b:fastest",
+     messages: [
+       {
+        role: "user",
+        content: prompt,
+       }
+       ]
+       });
+
+    
+ return chatCompletion.choices[0].message;
+
+ 
 }
 
 export const filterProductsByUserId = async (userId) => {

@@ -7,9 +7,9 @@ const router = new Router();
 // Defining User CRUD Routes
 
 router.route("/create").post(createUser);
-router.route("/delete").delete(deleteUser);
-router.route("/update").patch(updateUser);
-router.route("/create").get(getUsers);
+router.route("/delete/:id").delete(deleteUser);
+router.route("/update/:id").patch(updateUser);
+router.route("/get").get(getUsers);
 
 // User Auth Routes
 

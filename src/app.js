@@ -7,6 +7,7 @@ import cartRouter from "./routes/cart.route.js";
 import productRouter from "./routes/product.route.js";
 import { rateLimiter } from "./middlewares/rateLimit.middleware.js";
 import cors from "cors";
+import helmet from "helmet";
 
 const app = express();
 
@@ -21,6 +22,9 @@ app.use(cors({
     allowHeaders: ["Content-Type","Authorization"],
     credentials:true
 }));
+
+// Helmet Configuration
+app.use(helmet());
 
 // Applying RateLimiter in all app routes
 app.use(rateLimiter);

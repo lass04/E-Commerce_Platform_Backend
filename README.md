@@ -12,3 +12,4 @@ Features :
 * AI Integration
 * Rate Limiting
 * Cors Configuration
+* Helmet Configuration (To prevent XSS,ClickJacking...) 

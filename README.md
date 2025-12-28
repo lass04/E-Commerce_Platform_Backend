@@ -7,7 +7,8 @@ Technologies :
 
 Features :
 * RESTful APIs
-* JWT Authentication & Authorizaion
+* JWT Authentication 
+* Role-Based Authorization
 * bcrypt Password Hashing
 * AI Integration
 * Rate Limiting

@@ -15,3 +15,4 @@ Features :
 * Cors Configuration
 * Helmet Configuration (To prevent XSS,ClickJacking...) 
 * Products Filtering & Pagination
+* Input Validation

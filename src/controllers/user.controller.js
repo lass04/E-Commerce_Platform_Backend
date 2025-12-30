@@ -52,7 +52,7 @@ const updateUser = async (req,res) => {
         if(!id)
             return res.status(400).json({
                 success:false,
-                message:"No parameters in your request"
+                message:"No User Id parameter in your request"
             });
 
         if(Object.keys(req).length===0)

@@ -6,11 +6,37 @@ const createOrder = async (req,res) => {
     try{
 
     const { user, items , totalPrice , status } = req.body;
+
+    const verify_items =  (items) => {
+    items.forEach(ele=>{
+        if(ele.length!==3)
+            return false;
+    });
+    return true;
+   }
+
+   const verify_prices = async (items) => {
+    items.forEach(ele=>async ()=>{
+        const findProduct = await Product.findOne({product:ele.product});
+        if(!findProduct) return res.status(404).json({
+            success:false,
+            message:`Product with id:${ele.product} does not exist`
+        })
+        if(findProduct.price!==ele.price) 
+            return res.status(400).json({
+                success:false,
+                message:"Wrong price",
+                real_price:findProduct.price
+            });
+    })
+   }
+
+   verify_prices(items);
         
-    if(!user || items.length===0 || !totalPrice || !status )
+    if(!user || !verify_items(items) || !totalPrice || !status )
         return res.status(400).json({
             success: false,
-            message: "All fields are required"
+            message: "All fields are required (Items must contain 3 fileds product,quantity,price)"
         });
 
     let verifyTotal = 0;
@@ -169,10 +195,49 @@ const getOrders = async (req,res) => {
     }
 }
 
+const updateStatus = async (req,res) => {
+    try{
+
+        const id = req.params.id;
+        if(!id)
+            return res.status(400).json({
+                success:false,
+                message:"Order Id is required"
+            });
+
+        if(Object.keys(req.body).length!==1)
+            return res.status(400).json({
+                success:false,
+                message:"Request must contain order status only"
+            });
+        
+        const updateStatus = await Order.findByIdAndUpdate(id,req.body,{new:true});
+        if(!updateStatus)
+            return res.status(404).json({
+                success:false,
+                message:"No Order with this Id"
+            });
+
+        res.status(200).json({
+            success:true,
+            message:"Order Status successfully updated",
+            order:updateStatus
+        });
+
+    }catch(error){
+        return res.status(500).json({
+            success:false,
+            message:"Internal Server Error",
+            error:error.message
+        });
+    }
+}
+
 export {
     createOrder,
     deleteOrder,
     updateOrder,
     getUserOrders,
-    getOrders
+    getOrders,
+    updateStatus
 }

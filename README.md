@@ -7,9 +7,11 @@ Technologies :
 
 Features :
 * RESTful APIs
-* JWT Authentication & Authorizaion
+* JWT Authentication 
+* Role-Based Authorization
 * bcrypt Password Hashing
 * AI Integration
 * Rate Limiting
 * Cors Configuration
 * Helmet Configuration (To prevent XSS,ClickJacking...) 
+* Products Filtering & Pagination

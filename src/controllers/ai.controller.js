@@ -6,12 +6,11 @@ import "dotenv/config";
 
 
 
-export const getCartSummary = async (userId) => {
+export const getCartSummary = async (cart) => {
 
-    const findCart = await Cart.findOne({user:userId}).populate("items.product");
 
     let prompt = `Based on a Cart in JSON format , you will make a good summary 
-    which is clear and well structured (Please let the response be in JSON format remove '\n'): ${JSON.stringify(findCart,null,2)}`;
+    which is clear and well structured (Please let the response be in JSON format remove '\n'): ${JSON.stringify(cart,null,2)}`;
   
 
   const client = new InferenceClient(process.env.INFERENCE_PROVIDER_KEY);

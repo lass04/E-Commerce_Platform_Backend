@@ -1,7 +1,7 @@
 import Router from "express";
 import { createUser, deleteUser, updateUser, getUsers , loginUser , logoutUser , refreshUserToken }
 from "../controllers/user.controller.js";
-import { check } from "express-validator";
+import { body } from "express-validator";
 import validateRequest from "../middlewares/reqValidation.middleware.js";
 
 const router = new Router();
@@ -10,11 +10,11 @@ const router = new Router();
 
 router.route("/create").post(
     [
-        check('email').isEmail().withMessage("Wrong email format"),
-        check('phoneNumber').isNumeric().isLength({min:8,max:8}).withMessage("Wrong phoneNumber Input"),
-        check('password').isLength({min:8}).withMessage("Password is minimum 8 characters"),
-        check('nom').trim().isLength({min:5,max:15}).withMessage("nom length must be between 5 & 15"),
-        check('prenom').trim().isLength({min:5,max:15}).withMessage("prenom length must be between 5 & 15")
+        body('email').isEmail().withMessage("Wrong email format"),
+        body('phoneNumber').isNumeric().isLength({min:8,max:8}).withMessage("Wrong phoneNumber Input"),
+        body('password').isLength({min:8}).withMessage("Password is minimum 8 characters"),
+        body('nom').trim().isLength({min:5,max:15}).withMessage("nom length must be between 5 & 15"),
+        body('prenom').trim().isLength({min:5,max:15}).withMessage("prenom length must be between 5 & 15")
     ],
     validateRequest,
     createUser

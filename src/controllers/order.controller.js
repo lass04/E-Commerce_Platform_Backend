@@ -1,5 +1,5 @@
 import { Order } from "../models/order.model.js";
-
+import { Cart } from "../models/cart.model.js";
 
 const createOrder = async (req,res) => {
     
@@ -54,6 +54,8 @@ const createOrder = async (req,res) => {
         totalPrice:totalPrice,
         status:status
     });
+
+    await Cart.findByIdAndDelete(user);
 
     res.status(201).json({
         success:true,

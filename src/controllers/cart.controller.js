@@ -211,7 +211,7 @@ const viewCartSummary = async (req,res) => {
 
     try{
     
-        const userId = req.user.userId;
+        const userId = req.params.id;
 
     if(!userId)
         return res.status(400).json({
@@ -226,7 +226,7 @@ const viewCartSummary = async (req,res) => {
                 message:"Cart does not exist"
             });
 
-        const summary = await getCartSummary(userId);
+        const summary = await getCartSummary(findCart);
     
         res.status(200).json({
             success:true,

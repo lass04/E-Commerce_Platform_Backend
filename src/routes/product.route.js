@@ -5,6 +5,7 @@ from "../controllers/product.controller.js";
 import { adminOnly , authenticate } from "../middlewares/auth.middleware.js";
 import { body } from "express-validator";
 import validateRequest from "../middlewares/reqValidation.middleware.js";
+import { upload } from "../middlewares/upload.middleware.js";
 
 const router = new Router();
 
@@ -16,6 +17,7 @@ router.route("/create").post(
         body("status").isLength({min:4,max:9}).withMessage("Status must be one of [pending,paid,shipped,delivered]")
     ],
     adminOnly,
+    upload.single("image"),
     validateRequest,
     createProduct
 );

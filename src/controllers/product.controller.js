@@ -6,7 +6,9 @@ import { Category } from "../models/category.model.js";
 const createProduct = async (req,res) => {
 
     try{
-        const { name, description , price , category , stockQuantity , image } = req.body;
+
+        const { name, description , price , category , stockQuantity  } = req.body;
+        const image = req.file.filename;
 
         if( !name || !description || !price || category.length===0 || stockQuantity===undefined || !image)
             return res.status(400).json({
@@ -27,7 +29,7 @@ const createProduct = async (req,res) => {
             price:price,
             category:category,
             stockQuantity:stockQuantity,
-            image:image
+            image:`/uploads/${req.file.filename}`
         });
 
         res.status(201).json({
